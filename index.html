@@ -474,9 +474,91 @@
     .apply-form-wrap { display: block; }
     .apply-form-wrap.hidden { display: none; }
 
+    /* ── WIZARD PROGRESS ── */
+    .wizard-progress {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 22px;
+    }
+    .wizard-progress .seg {
+      flex: 1; height: 5px; border-radius: 3px; background: var(--line);
+      overflow: hidden;
+    }
+    .wizard-progress .seg .fill {
+      height: 100%; width: 0%; background: var(--orange);
+      transition: width 0.3s ease;
+    }
+    .wizard-progress .seg.done .fill { width: 100%; }
+    .wizard-progress .seg.active .fill { width: 100%; }
+    .wizard-step-label {
+      font-size: 12px; color: var(--gray-lt); font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;
+    }
+
+    /* ── STEP PANELS ── */
+    .wizard-step { display: none; }
+    .wizard-step.active { display: block; }
+
+    /* ── PILL CHOICE CONTROLS (radio / checkbox) ── */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill-group.stacked { flex-direction: column; }
+    .pill-option { position: relative; }
+    .pill-option input {
+      position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer;
+    }
+    .pill-option label {
+      display: flex; align-items: center; gap: 9px;
+      padding: 12px 16px; border-radius: 9px;
+      border: 1.5px solid var(--line); background: #fff;
+      font-size: 14px; font-weight: 600; color: var(--navy);
+      cursor: pointer; transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .pill-option label .dot {
+      width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line);
+      flex-shrink: 0; position: relative; transition: border-color 0.15s;
+    }
+    .pill-option label .box {
+      width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--line);
+      flex-shrink: 0; position: relative; transition: border-color 0.15s, background 0.15s;
+    }
+    .pill-option input:checked + label {
+      border-color: var(--orange); background: rgba(217,102,31,0.06);
+    }
+    .pill-option input:checked + label .dot { border-color: var(--orange); }
+    .pill-option input:checked + label .dot::after {
+      content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--orange);
+    }
+    .pill-option input:checked + label .box { border-color: var(--orange); background: var(--orange); }
+    .pill-option input:checked + label .box::after {
+      content: ''; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px;
+      border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+    }
+    .pill-option input:focus-visible + label { outline: 2px solid var(--orange); outline-offset: 1px; }
+
+    .amount-input-wrap { position: relative; }
+    .amount-input-wrap .prefix {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--gray); font-weight: 600; font-size: 14.5px; pointer-events: none;
+    }
+    .amount-input-wrap input { padding-left: 28px; }
+
+    /* ── WIZARD NAV BUTTONS ── */
+    .wizard-nav { display: flex; gap: 12px; margin-top: 8px; }
+    .wizard-nav .btn-back {
+      flex: 0 0 auto;
+      background: #fff; color: var(--navy); border: 1.5px solid var(--line);
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 15px;
+      padding: 15px 20px; border-radius: 9px; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .wizard-nav .btn-back:hover { background: var(--light); }
+    .wizard-nav .form-submit-btn { flex: 1; margin-top: 0; }
+
     @media (max-width: 560px) {
       .form-row-2 { grid-template-columns: 1fr; }
       .modal-card { padding: 30px 22px 26px; }
+      .pill-group:not(.stacked) { flex-direction: column; }
+      .pill-group:not(.stacked) .pill-option { width: 100%; }
+      .pill-group:not(.stacked) .pill-option label { width: 100%; }
     }
   </style>
 </head>
@@ -668,55 +750,146 @@
       <h2 class="modal-title" id="applyModalTitle">Start Your Application</h2>
       <p class="modal-sub">Tell us a little about your situation. A member of our team will follow up by phone or email.</p>
 
+      <div class="wizard-progress">
+        <div class="seg" data-seg="1"><div class="fill"></div></div>
+        <div class="seg" data-seg="2"><div class="fill"></div></div>
+        <div class="seg" data-seg="3"><div class="fill"></div></div>
+        <div class="seg" data-seg="4"><div class="fill"></div></div>
+      </div>
+      <div class="wizard-step-label" id="wizardStepLabel">Step 1 of 4 · Contact Info</div>
+
       <form id="applyForm" novalidate>
-        <div class="form-row-2">
+
+        <!-- STEP 1: Contact Info -->
+        <div class="wizard-step active" data-step="1">
           <div class="form-row" data-field="fullName">
             <label class="form-label" for="fullName">Full Name <span class="req">*</span></label>
             <input class="form-input" type="text" id="fullName" name="fullName" autocomplete="name" placeholder="Jane Doe">
             <div class="form-error">Please enter your full name.</div>
           </div>
           <div class="form-row" data-field="phone">
-            <label class="form-label" for="phone">Phone <span class="req">*</span></label>
+            <label class="form-label" for="phone">Phone Number <span class="req">*</span></label>
             <input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(555) 123-4567">
             <div class="form-error">Please enter a valid phone number.</div>
           </div>
-        </div>
-
-        <div class="form-row" data-field="email">
-          <label class="form-label" for="email">Email <span class="req">*</span></label>
-          <input class="form-input" type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com">
-          <div class="form-error">Please enter a valid email address.</div>
-        </div>
-
-        <div class="form-row-2">
-          <div class="form-row" data-field="assistanceType">
-            <label class="form-label" for="assistanceType">Assistance Needed <span class="req">*</span></label>
-            <select class="form-select" id="assistanceType" name="assistanceType">
-              <option value="">Select one…</option>
-              <option value="Rent Assistance">Rent Assistance</option>
-              <option value="Utility Bills">Utility Bills</option>
-              <option value="Security Deposit">Security Deposit</option>
-              <option value="Not sure">Not sure</option>
-            </select>
-            <div class="form-error">Please select an option.</div>
+          <div class="form-row" data-field="email">
+            <label class="form-label" for="email">Email Address <span class="req">*</span></label>
+            <input class="form-input" type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com">
+            <div class="form-error">Please enter a valid email address.</div>
           </div>
-          <div class="form-row" data-field="location">
-            <label class="form-label" for="location">City &amp; State <span class="req">*</span></label>
-            <input class="form-input" type="text" id="location" name="location" autocomplete="address-level2" placeholder="Austin, TX">
-            <div class="form-error">Please enter your city and state.</div>
+          <div class="form-row" data-field="preferredContact">
+            <label class="form-label">Preferred Contact Method <span class="req">*</span></label>
+            <div class="pill-group">
+              <div class="pill-option"><input type="radio" name="preferredContact" id="pc-text" value="Text"><label for="pc-text"><span class="dot"></span>Text</label></div>
+              <div class="pill-option"><input type="radio" name="preferredContact" id="pc-email" value="Email"><label for="pc-email"><span class="dot"></span>Email</label></div>
+              <div class="pill-option"><input type="radio" name="preferredContact" id="pc-fb" value="Facebook Messenger"><label for="pc-fb"><span class="dot"></span>Facebook Messenger</label></div>
+            </div>
+            <div class="form-error">Please choose a contact method.</div>
+          </div>
+
+          <div class="wizard-nav">
+            <button type="button" class="form-submit-btn" onclick="goToStep(2)">
+              <span class="btn-spinner"></span>
+              <span class="btn-label">Next</span>
+            </button>
           </div>
         </div>
 
-        <div class="form-row" data-field="message">
-          <label class="form-label" for="message">Briefly describe your situation <span class="req">*</span></label>
-          <textarea class="form-textarea" id="message" name="message" placeholder="What's going on, and what would help most right now?"></textarea>
-          <div class="form-error">Please share a few details so we can help.</div>
+        <!-- STEP 2: Situation -->
+        <div class="wizard-step" data-step="2">
+          <div class="form-row" data-field="helpType">
+            <label class="form-label">What do you need help with? <span class="req">*</span></label>
+            <div class="pill-group stacked">
+              <div class="pill-option"><input type="checkbox" name="helpType" id="ht-rent" value="Rent Assistance"><label for="ht-rent"><span class="box"></span>Rent Assistance</label></div>
+              <div class="pill-option"><input type="checkbox" name="helpType" id="ht-utility" value="Utility Assistance"><label for="ht-utility"><span class="box"></span>Utility Assistance</label></div>
+              <div class="pill-option"><input type="checkbox" name="helpType" id="ht-deposit" value="Security Deposit"><label for="ht-deposit"><span class="box"></span>Security Deposit</label></div>
+            </div>
+            <div class="form-error">Please select at least one option.</div>
+          </div>
+
+          <div class="form-row" data-field="housingStatus">
+            <label class="form-label">Current Housing Status <span class="req">*</span></label>
+            <div class="pill-group stacked">
+              <div class="pill-option"><input type="radio" name="housingStatus" id="hs-renting" value="Renting"><label for="hs-renting"><span class="dot"></span>Renting</label></div>
+              <div class="pill-option"><input type="radio" name="housingStatus" id="hs-family" value="Staying with family/friends"><label for="hs-family"><span class="dot"></span>Staying with family/friends</label></div>
+              <div class="pill-option"><input type="radio" name="housingStatus" id="hs-risk" value="At risk of eviction"><label for="hs-risk"><span class="dot"></span>At risk of eviction</label></div>
+              <div class="pill-option"><input type="radio" name="housingStatus" id="hs-homeless" value="Currently homeless"><label for="hs-homeless"><span class="dot"></span>Currently homeless</label></div>
+            </div>
+            <div class="form-error">Please select your housing status.</div>
+          </div>
+
+          <div class="form-row" data-field="employmentStatus">
+            <label class="form-label">Employment Status <span class="req">*</span></label>
+            <div class="pill-group">
+              <div class="pill-option"><input type="radio" name="employmentStatus" id="es-employed" value="Employed"><label for="es-employed"><span class="dot"></span>Employed</label></div>
+              <div class="pill-option"><input type="radio" name="employmentStatus" id="es-unemployed" value="Unemployed"><label for="es-unemployed"><span class="dot"></span>Unemployed</label></div>
+              <div class="pill-option"><input type="radio" name="employmentStatus" id="es-self" value="Self-employed"><label for="es-self"><span class="dot"></span>Self-employed</label></div>
+              <div class="pill-option"><input type="radio" name="employmentStatus" id="es-student" value="Student"><label for="es-student"><span class="dot"></span>Student</label></div>
+            </div>
+            <div class="form-error">Please select your employment status.</div>
+          </div>
+
+          <div class="wizard-nav">
+            <button type="button" class="btn-back" onclick="goToStep(1)">Back</button>
+            <button type="button" class="form-submit-btn" onclick="goToStep(3)">
+              <span class="btn-spinner"></span>
+              <span class="btn-label">Next</span>
+            </button>
+          </div>
         </div>
 
-        <button type="submit" class="form-submit-btn" id="applySubmitBtn">
-          <span class="btn-spinner"></span>
-          <span class="btn-label">Submit Application</span>
-        </button>
+        <!-- STEP 3: Financial Details -->
+        <div class="wizard-step" data-step="3">
+          <div class="form-row" data-field="monthlyIncome">
+            <label class="form-label" for="monthlyIncome">Monthly Household Income <span class="req">*</span></label>
+            <div class="amount-input-wrap">
+              <span class="prefix">$</span>
+              <input class="form-input" type="number" min="0" step="1" id="monthlyIncome" name="monthlyIncome" placeholder="2500">
+            </div>
+            <div class="form-error">Please enter your monthly household income.</div>
+          </div>
+
+          <div class="form-row" data-field="unableToPay">
+            <label class="form-label">Are you currently unable to pay rent or utilities? <span class="req">*</span></label>
+            <div class="pill-group">
+              <div class="pill-option"><input type="radio" name="unableToPay" id="utp-yes" value="Yes"><label for="utp-yes"><span class="dot"></span>Yes</label></div>
+              <div class="pill-option"><input type="radio" name="unableToPay" id="utp-no" value="No"><label for="utp-no"><span class="dot"></span>No</label></div>
+            </div>
+            <div class="form-error">Please answer this question.</div>
+          </div>
+
+          <div class="wizard-nav">
+            <button type="button" class="btn-back" onclick="goToStep(2)">Back</button>
+            <button type="button" class="form-submit-btn" onclick="goToStep(4)">
+              <span class="btn-spinner"></span>
+              <span class="btn-label">Next</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Final Details -->
+        <div class="wizard-step" data-step="4">
+          <div class="form-row" data-field="hardshipCause">
+            <label class="form-label" for="hardshipCause">What caused your financial hardship? <span class="req">*</span></label>
+            <textarea class="form-textarea" id="hardshipCause" name="hardshipCause" placeholder="Tell us briefly what happened…"></textarea>
+            <div class="form-error">Please share a few details so we can help.</div>
+          </div>
+
+          <div class="form-row" data-field="confirm">
+            <div class="pill-group stacked">
+              <div class="pill-option"><input type="checkbox" name="confirm" id="confirm" value="I confirm"><label for="confirm"><span class="box"></span>I confirm I am experiencing financial hardship and the information provided is accurate.</label></div>
+            </div>
+            <div class="form-error">Please confirm before submitting.</div>
+          </div>
+
+          <div class="wizard-nav">
+            <button type="button" class="btn-back" onclick="goToStep(3)">Back</button>
+            <button type="submit" class="form-submit-btn" id="applySubmitBtn">
+              <span class="btn-spinner"></span>
+              <span class="btn-label">Submit Application</span>
+            </button>
+          </div>
+        </div>
 
         <p class="form-privacy-note">Your information is kept confidential and is only used to process your application.</p>
       </form>
@@ -727,7 +900,7 @@
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
       </div>
       <h3>Application Received</h3>
-      <p>Thank you — we've got your information. A member of our team will reach out by phone or email shortly.</p>
+      <p>Thank you. We've got your information, and a member of our team will reach out by phone or email shortly.</p>
       <button type="button" class="btn-primary" onclick="closeApplyModal()">Done</button>
     </div>
   </div>
@@ -739,28 +912,88 @@
   // (Deploy the Apps Script as: Deploy > New deployment > Web app,
   //  Execute as: Me, Who has access: Anyone.)
   // ─────────────────────────────────────────────────────────────
-  const APPLY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzD5-FvqGI7oiWc5VRnzETLnTbAJNQZBlTp-dG4aQvcikSh9uBXlLmjCm9uQUPTPnE/exec";
+  const APPLY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbydinD37vsYUeyhCyaiYnaHkFebbEFw_xq5lnITqiJULRoUDoUw6K9GGE9AmqbDC4MU/exec";
+
+  // Every loading screen in this file (initial open, each "Next" click, and
+  // final submit) waits at least this long before revealing the next state.
+  const MIN_LOADING_MS = 2000;
 
   const pageLoadingOverlay = document.getElementById('pageLoadingOverlay');
+  const loadingTextEl = pageLoadingOverlay.querySelector('.loading-text');
   const applyModalBackdrop = document.getElementById('applyModalBackdrop');
   const applyFormWrap = document.getElementById('applyFormWrap');
   const applySuccess = document.getElementById('applySuccess');
   const applyForm = document.getElementById('applyForm');
   const applySubmitBtn = document.getElementById('applySubmitBtn');
+  const wizardStepLabel = document.getElementById('wizardStepLabel');
 
-  function openApplyModal() {
-    // Show a brief full-screen loading state for a professional, deliberate feel
+  const TOTAL_STEPS = 4;
+  const STEP_LABELS = {
+    1: 'Step 1 of 4 · Contact Info',
+    2: 'Step 2 of 4 · Your Situation',
+    3: 'Step 3 of 4 · Financial Details',
+    4: 'Step 4 of 4 · Final Details'
+  };
+  let currentStep = 1;
+
+  function wait(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, ms); });
+  }
+
+  // Runs `task` (sync or async) while showing the full-screen loading overlay
+  // for at least MIN_LOADING_MS, regardless of how fast `task` finishes.
+  async function withLoadingScreen(message, task) {
+    loadingTextEl.textContent = message;
     pageLoadingOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const started = Date.now();
 
-    setTimeout(function () {
+    let result;
+    try {
+      result = await task();
+    } finally {
+      const elapsed = Date.now() - started;
+      const remaining = MIN_LOADING_MS - elapsed;
+      if (remaining > 0) await wait(remaining);
       pageLoadingOverlay.classList.remove('active');
-      applyFormWrap.classList.remove('hidden');
-      applySuccess.classList.remove('active');
-      applyModalBackdrop.classList.add('active');
-      const firstField = document.getElementById('fullName');
-      if (firstField) firstField.focus();
-    }, 600);
+    }
+    return result;
+  }
+
+  function updateProgress(step) {
+    document.querySelectorAll('.wizard-progress .seg').forEach(function (seg) {
+      const segNum = parseInt(seg.getAttribute('data-seg'), 10);
+      seg.classList.toggle('done', segNum < step);
+      seg.classList.toggle('active', segNum === step);
+    });
+    wizardStepLabel.textContent = STEP_LABELS[step] || '';
+  }
+
+  function showStep(step) {
+    document.querySelectorAll('.wizard-step').forEach(function (panel) {
+      panel.classList.toggle('active', parseInt(panel.getAttribute('data-step'), 10) === step);
+    });
+    updateProgress(step);
+    currentStep = step;
+    const firstField = document.querySelector('.wizard-step[data-step="' + step + '"] input, .wizard-step[data-step="' + step + '"] textarea');
+    if (firstField) firstField.focus({ preventScroll: false });
+  }
+
+  async function goToStep(step) {
+    // Validate the step we're leaving before advancing forward.
+    if (step > currentStep) {
+      if (!validateStep(currentStep)) return;
+    }
+    await withLoadingScreen('Loading next step…', function () { return Promise.resolve(); });
+    showStep(step);
+  }
+
+  async function openApplyModal() {
+    document.body.style.overflow = 'hidden';
+    await withLoadingScreen('Preparing your application…', function () { return Promise.resolve(); });
+    applyFormWrap.classList.remove('hidden');
+    applySuccess.classList.remove('active');
+    applyModalBackdrop.classList.add('active');
+    showStep(1);
   }
 
   function closeApplyModal() {
@@ -775,86 +1008,123 @@
   });
 
   function clearFieldError(row) {
-    row.classList.remove('has-error');
+    if (row) row.classList.remove('has-error');
   }
 
   function setFieldError(row) {
-    row.classList.add('has-error');
+    if (row) row.classList.add('has-error');
   }
 
-  function validateApplyForm(data) {
+  function getRadioValue(name) {
+    const checked = applyForm.querySelector('input[name="' + name + '"]:checked');
+    return checked ? checked.value : '';
+  }
+
+  function getCheckboxValues(name) {
+    return Array.from(applyForm.querySelectorAll('input[name="' + name + '"]:checked')).map(function (el) { return el.value; });
+  }
+
+  function validateStep(step) {
     let valid = true;
-    const rows = applyForm.querySelectorAll('.form-row[data-field]');
-    rows.forEach(clearFieldError);
+    const panel = applyForm.querySelector('.wizard-step[data-step="' + step + '"]');
+    panel.querySelectorAll('.form-row[data-field]').forEach(clearFieldError);
 
-    const nameRow = applyForm.querySelector('[data-field="fullName"]');
-    if (!data.fullName.trim()) { setFieldError(nameRow); valid = false; }
+    if (step === 1) {
+      const nameRow = panel.querySelector('[data-field="fullName"]');
+      if (!document.getElementById('fullName').value.trim()) { setFieldError(nameRow); valid = false; }
 
-    const phoneRow = applyForm.querySelector('[data-field="phone"]');
-    if (!data.phone.trim() || data.phone.replace(/\D/g, '').length < 7) { setFieldError(phoneRow); valid = false; }
+      const phoneRow = panel.querySelector('[data-field="phone"]');
+      const phoneVal = document.getElementById('phone').value;
+      if (!phoneVal.trim() || phoneVal.replace(/\D/g, '').length < 7) { setFieldError(phoneRow); valid = false; }
 
-    const emailRow = applyForm.querySelector('[data-field="email"]');
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
-    if (!emailOk) { setFieldError(emailRow); valid = false; }
+      const emailRow = panel.querySelector('[data-field="email"]');
+      const emailVal = document.getElementById('email').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { setFieldError(emailRow); valid = false; }
 
-    const typeRow = applyForm.querySelector('[data-field="assistanceType"]');
-    if (!data.assistanceType) { setFieldError(typeRow); valid = false; }
+      const pcRow = panel.querySelector('[data-field="preferredContact"]');
+      if (!getRadioValue('preferredContact')) { setFieldError(pcRow); valid = false; }
+    }
 
-    const locationRow = applyForm.querySelector('[data-field="location"]');
-    if (!data.location.trim()) { setFieldError(locationRow); valid = false; }
+    if (step === 2) {
+      const helpRow = panel.querySelector('[data-field="helpType"]');
+      if (getCheckboxValues('helpType').length === 0) { setFieldError(helpRow); valid = false; }
 
-    const messageRow = applyForm.querySelector('[data-field="message"]');
-    if (!data.message.trim()) { setFieldError(messageRow); valid = false; }
+      const housingRow = panel.querySelector('[data-field="housingStatus"]');
+      if (!getRadioValue('housingStatus')) { setFieldError(housingRow); valid = false; }
+
+      const empRow = panel.querySelector('[data-field="employmentStatus"]');
+      if (!getRadioValue('employmentStatus')) { setFieldError(empRow); valid = false; }
+    }
+
+    if (step === 3) {
+      const incomeRow = panel.querySelector('[data-field="monthlyIncome"]');
+      const incomeVal = document.getElementById('monthlyIncome').value;
+      if (incomeVal === '' || Number(incomeVal) < 0) { setFieldError(incomeRow); valid = false; }
+
+      const utpRow = panel.querySelector('[data-field="unableToPay"]');
+      if (!getRadioValue('unableToPay')) { setFieldError(utpRow); valid = false; }
+    }
+
+    if (step === 4) {
+      const causeRow = panel.querySelector('[data-field="hardshipCause"]');
+      if (!document.getElementById('hardshipCause').value.trim()) { setFieldError(causeRow); valid = false; }
+
+      const confirmRow = panel.querySelector('[data-field="confirm"]');
+      if (!document.getElementById('confirm').checked) { setFieldError(confirmRow); valid = false; }
+    }
+
+    if (!valid) {
+      const firstError = panel.querySelector('.form-row.has-error input, .form-row.has-error textarea, .form-row.has-error select');
+      if (firstError) firstError.focus();
+    }
 
     return valid;
   }
 
-  applyForm.addEventListener('submit', function (e) {
+  applyForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    if (!validateStep(4)) return;
+
     const data = {
-      fullName: document.getElementById('fullName').value,
-      phone: document.getElementById('phone').value,
-      email: document.getElementById('email').value,
-      assistanceType: document.getElementById('assistanceType').value,
-      location: document.getElementById('location').value,
-      message: document.getElementById('message').value,
+      fullName: document.getElementById('fullName').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      preferredContact: getRadioValue('preferredContact'),
+      helpType: getCheckboxValues('helpType').join(', '),
+      housingStatus: getRadioValue('housingStatus'),
+      employmentStatus: getRadioValue('employmentStatus'),
+      monthlyIncome: document.getElementById('monthlyIncome').value,
+      unableToPay: getRadioValue('unableToPay'),
+      hardshipCause: document.getElementById('hardshipCause').value.trim(),
+      confirm: document.getElementById('confirm').checked ? 'Yes' : 'No',
       submittedAt: new Date().toISOString(),
-      source: 'bizrisk-style-landing-page' // harmless tag identifying the source form
+      source: 'bridge-housing-website'
     };
 
-    if (!validateApplyForm(data)) {
-      const firstError = applyForm.querySelector('.form-row.has-error .form-input, .form-row.has-error .form-select, .form-row.has-error .form-textarea');
-      if (firstError) firstError.focus();
-      return;
-    }
-
-    // ── Loading state on the submit button ──
     applySubmitBtn.classList.add('loading');
     applySubmitBtn.disabled = true;
 
     const params = new URLSearchParams(data);
 
-    fetch(APPLY_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors', // Apps Script Web Apps don't return CORS headers for cross-origin reads;
-                        // the request still reaches the script and gets processed.
-      body: params
-    })
-      .catch(function (err) {
+    await withLoadingScreen('Submitting your application…', function () {
+      return fetch(APPLY_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Apps Script Web Apps don't return CORS headers for cross-origin reads;
+                          // the request still reaches the script and gets processed.
+        body: params
+      }).catch(function (err) {
         // Network-level failure only (e.g. offline); the no-cors request itself
         // will still typically succeed even though we can't read the response.
         console.error('Submission network error:', err);
-      })
-      .finally(function () {
-        setTimeout(function () {
-          applySubmitBtn.classList.remove('loading');
-          applySubmitBtn.disabled = false;
-          applyForm.reset();
-          applyFormWrap.classList.add('hidden');
-          applySuccess.classList.add('active');
-        }, 700); // brief delay so the loading state feels intentional, not instant
       });
+    });
+
+    applySubmitBtn.classList.remove('loading');
+    applySubmitBtn.disabled = false;
+    applyForm.reset();
+    applyFormWrap.classList.add('hidden');
+    applySuccess.classList.add('active');
   });
 </script>
 
