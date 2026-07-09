@@ -569,6 +569,10 @@
       .pill-group:not(.stacked) { flex-direction: column; }
       .pill-group:not(.stacked) .pill-option { width: 100%; }
       .pill-group:not(.stacked) .pill-option label { width: 100%; }
+
+      /* Hide the top nav/logo bar inside the Apply page on mobile, keep only the close (X) button */
+      .apply-page-header { justify-content: flex-end; }
+      .apply-page-brand { display: none; }
     }
   </style>
 </head>
