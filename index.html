@@ -421,7 +421,7 @@
     .form-input, .form-select, .form-textarea {
       width: 100%; padding: 12px 14px; border-radius: 8px;
       border: 1.5px solid var(--line); background: #fff;
-      font-family: 'DM Sans', sans-serif; font-size: 14.5px; color: var(--navy);
+      font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--navy);
       transition: border-color 0.15s;
     }
     .form-input:focus, .form-select:focus, .form-textarea:focus {
@@ -746,7 +746,6 @@
     <button type="button" class="modal-close" onclick="closeApplyModal()" aria-label="Close">✕</button>
 
     <div class="apply-form-wrap" id="applyFormWrap">
-      <p class="modal-eyebrow">Free · Under 2 Minutes</p>
       <h2 class="modal-title" id="applyModalTitle">Start Your Application</h2>
       <p class="modal-sub">Tell us a little about your situation. A member of our team will follow up by phone or email.</p>
 
@@ -755,8 +754,9 @@
         <div class="seg" data-seg="2"><div class="fill"></div></div>
         <div class="seg" data-seg="3"><div class="fill"></div></div>
         <div class="seg" data-seg="4"><div class="fill"></div></div>
+        <div class="seg" data-seg="5"><div class="fill"></div></div>
       </div>
-      <div class="wizard-step-label" id="wizardStepLabel">Step 1 of 4 · Contact Info</div>
+      <div class="wizard-step-label" id="wizardStepLabel">Step 1 of 5 · Contact Info</div>
 
       <form id="applyForm" novalidate>
 
@@ -818,6 +818,17 @@
             <div class="form-error">Please select your housing status.</div>
           </div>
 
+          <div class="wizard-nav">
+            <button type="button" class="btn-back" onclick="goToStep(1)">Back</button>
+            <button type="button" class="form-submit-btn" onclick="goToStep(3)">
+              <span class="btn-spinner"></span>
+              <span class="btn-label">Next</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Employment & Income -->
+        <div class="wizard-step" data-step="3">
           <div class="form-row" data-field="employmentStatus">
             <label class="form-label">Employment Status <span class="req">*</span></label>
             <div class="pill-group">
@@ -829,17 +840,6 @@
             <div class="form-error">Please select your employment status.</div>
           </div>
 
-          <div class="wizard-nav">
-            <button type="button" class="btn-back" onclick="goToStep(1)">Back</button>
-            <button type="button" class="form-submit-btn" onclick="goToStep(3)">
-              <span class="btn-spinner"></span>
-              <span class="btn-label">Next</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 3: Financial Details -->
-        <div class="wizard-step" data-step="3">
           <div class="form-row" data-field="monthlyIncome">
             <label class="form-label" for="monthlyIncome">Monthly Household Income <span class="req">*</span></label>
             <div class="amount-input-wrap">
@@ -847,15 +847,6 @@
               <input class="form-input" type="number" min="0" step="1" id="monthlyIncome" name="monthlyIncome" placeholder="2500">
             </div>
             <div class="form-error">Please enter your monthly household income.</div>
-          </div>
-
-          <div class="form-row" data-field="unableToPay">
-            <label class="form-label">Are you currently unable to pay rent or utilities? <span class="req">*</span></label>
-            <div class="pill-group">
-              <div class="pill-option"><input type="radio" name="unableToPay" id="utp-yes" value="Yes"><label for="utp-yes"><span class="dot"></span>Yes</label></div>
-              <div class="pill-option"><input type="radio" name="unableToPay" id="utp-no" value="No"><label for="utp-no"><span class="dot"></span>No</label></div>
-            </div>
-            <div class="form-error">Please answer this question.</div>
           </div>
 
           <div class="wizard-nav">
@@ -867,15 +858,36 @@
           </div>
         </div>
 
-        <!-- STEP 4: Final Details -->
+        <!-- STEP 4: Rent Situation -->
         <div class="wizard-step" data-step="4">
+          <div class="form-row" data-field="unableToPay">
+            <label class="form-label">Are you currently unable to pay rent or utilities? <span class="req">*</span></label>
+            <div class="pill-group">
+              <div class="pill-option"><input type="radio" name="unableToPay" id="utp-yes" value="Yes"><label for="utp-yes"><span class="dot"></span>Yes</label></div>
+              <div class="pill-option"><input type="radio" name="unableToPay" id="utp-no" value="No"><label for="utp-no"><span class="dot"></span>No</label></div>
+            </div>
+            <div class="form-error">Please answer this question.</div>
+          </div>
+
           <div class="form-row" data-field="hardshipCause">
             <label class="form-label" for="hardshipCause">What caused your financial hardship? <span class="req">*</span></label>
             <textarea class="form-textarea" id="hardshipCause" name="hardshipCause" placeholder="Tell us briefly what happened…"></textarea>
             <div class="form-error">Please share a few details so we can help.</div>
           </div>
 
+          <div class="wizard-nav">
+            <button type="button" class="btn-back" onclick="goToStep(3)">Back</button>
+            <button type="button" class="form-submit-btn" onclick="goToStep(5)">
+              <span class="btn-spinner"></span>
+              <span class="btn-label">Next</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 5: Confirm -->
+        <div class="wizard-step" data-step="5">
           <div class="form-row" data-field="confirm">
+            <label class="form-label">Final Confirmation <span class="req">*</span></label>
             <div class="pill-group stacked">
               <div class="pill-option"><input type="checkbox" name="confirm" id="confirm" value="I confirm"><label for="confirm"><span class="box"></span>I confirm I am experiencing financial hardship and the information provided is accurate.</label></div>
             </div>
@@ -883,7 +895,7 @@
           </div>
 
           <div class="wizard-nav">
-            <button type="button" class="btn-back" onclick="goToStep(3)">Back</button>
+            <button type="button" class="btn-back" onclick="goToStep(4)">Back</button>
             <button type="submit" class="form-submit-btn" id="applySubmitBtn">
               <span class="btn-spinner"></span>
               <span class="btn-label">Submit Application</span>
@@ -927,12 +939,13 @@
   const applySubmitBtn = document.getElementById('applySubmitBtn');
   const wizardStepLabel = document.getElementById('wizardStepLabel');
 
-  const TOTAL_STEPS = 4;
+  const TOTAL_STEPS = 5;
   const STEP_LABELS = {
-    1: 'Step 1 of 4 · Contact Info',
-    2: 'Step 2 of 4 · Your Situation',
-    3: 'Step 3 of 4 · Financial Details',
-    4: 'Step 4 of 4 · Final Details'
+    1: 'Step 1 of 5 · Contact Info',
+    2: 'Step 2 of 5 · Your Situation',
+    3: 'Step 3 of 5 · Employment & Income',
+    4: 'Step 4 of 5 · Rent Situation',
+    5: 'Step 5 of 5 · Confirm'
   };
   let currentStep = 1;
 
@@ -1051,24 +1064,26 @@
 
       const housingRow = panel.querySelector('[data-field="housingStatus"]');
       if (!getRadioValue('housingStatus')) { setFieldError(housingRow); valid = false; }
-
-      const empRow = panel.querySelector('[data-field="employmentStatus"]');
-      if (!getRadioValue('employmentStatus')) { setFieldError(empRow); valid = false; }
     }
 
     if (step === 3) {
+      const empRow = panel.querySelector('[data-field="employmentStatus"]');
+      if (!getRadioValue('employmentStatus')) { setFieldError(empRow); valid = false; }
+
       const incomeRow = panel.querySelector('[data-field="monthlyIncome"]');
       const incomeVal = document.getElementById('monthlyIncome').value;
       if (incomeVal === '' || Number(incomeVal) < 0) { setFieldError(incomeRow); valid = false; }
-
-      const utpRow = panel.querySelector('[data-field="unableToPay"]');
-      if (!getRadioValue('unableToPay')) { setFieldError(utpRow); valid = false; }
     }
 
     if (step === 4) {
+      const utpRow = panel.querySelector('[data-field="unableToPay"]');
+      if (!getRadioValue('unableToPay')) { setFieldError(utpRow); valid = false; }
+
       const causeRow = panel.querySelector('[data-field="hardshipCause"]');
       if (!document.getElementById('hardshipCause').value.trim()) { setFieldError(causeRow); valid = false; }
+    }
 
+    if (step === 5) {
       const confirmRow = panel.querySelector('[data-field="confirm"]');
       if (!document.getElementById('confirm').checked) { setFieldError(confirmRow); valid = false; }
     }
@@ -1084,7 +1099,7 @@
   applyForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    if (!validateStep(4)) return;
+    if (!validateStep(5)) return;
 
     const data = {
       fullName: document.getElementById('fullName').value.trim(),
