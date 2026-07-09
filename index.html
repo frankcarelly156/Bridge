@@ -91,7 +91,7 @@
       border-bottom: 1px solid var(--line);
     }
 
-    .hero-logo { height: 96px; width: auto; margin-bottom: 28px; }
+    .hero-logo { display: none; height: 96px; width: auto; margin-bottom: 28px; }
 
     .hero-eyebrow {
       font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
@@ -328,14 +328,155 @@
       .nav-links { display: none; }
     }
     @media (max-width: 600px) {
-      nav { padding: 14px 20px; }
-      .nav-brand { font-size: 14px; }
+      nav { display: none; }
+      .hero-logo { display: block; }
       .hero { padding: 130px 20px 64px; }
       .section { padding: 64px 20px; }
       .strip-item { padding: 16px 20px; border-right: none; width: 100%; justify-content: center; border-bottom: 1px solid var(--line); }
       .strip-item:last-child { border-bottom: none; }
       .step { text-align: center; }
       .step-num { text-align: center; }
+    }
+
+    /* ── APPLY BUTTON (converted from <a> to <button>) ── */
+    button.btn-primary, button.btn-white {
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── FULL-SCREEN LOADING OVERLAY ── */
+    .page-loading-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(250,247,242,0.97);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.25s ease;
+    }
+    .page-loading-overlay.active { opacity: 1; visibility: visible; }
+    .loading-spinner {
+      width: 54px; height: 54px;
+      border: 4px solid rgba(217,102,31,0.15);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      color: var(--navy);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── APPLY MODAL ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 998;
+      background: rgba(14,27,54,0.55);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.2s ease;
+    }
+    .modal-backdrop.active { opacity: 1; visibility: visible; }
+    .modal-card {
+      background: var(--paper);
+      border-radius: 16px;
+      max-width: 560px; width: 100%;
+      max-height: 88vh; overflow-y: auto;
+      padding: 40px 40px 32px;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(14,27,54,0.35);
+      transform: translateY(16px);
+      transition: transform 0.25s ease;
+    }
+    .modal-backdrop.active .modal-card { transform: translateY(0); }
+    .modal-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 34px; height: 34px; border-radius: 50%;
+      border: none; background: var(--light); color: var(--navy);
+      font-size: 18px; cursor: pointer; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover { background: var(--line); }
+    .modal-eyebrow {
+      font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--orange-dk); font-weight: 700; margin-bottom: 8px;
+    }
+    .modal-title {
+      font-family: 'Fraunces', serif; font-weight: 700; font-size: 26px;
+      color: var(--navy); margin-bottom: 6px;
+    }
+    .modal-sub {
+      color: var(--gray); font-size: 14.5px; margin-bottom: 26px; line-height: 1.5;
+    }
+    .form-row { margin-bottom: 16px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-label {
+      display: block; font-size: 13px; font-weight: 600; color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .form-label .req { color: var(--orange-dk); }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 12px 14px; border-radius: 8px;
+      border: 1.5px solid var(--line); background: #fff;
+      font-family: 'DM Sans', sans-serif; font-size: 14.5px; color: var(--navy);
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none; border-color: var(--orange);
+    }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-error {
+      color: #b3261e; font-size: 12.5px; margin-top: 5px; display: none;
+    }
+    .form-row.has-error .form-input,
+    .form-row.has-error .form-select,
+    .form-row.has-error .form-textarea { border-color: #b3261e; }
+    .form-row.has-error .form-error { display: block; }
+    .form-submit-btn {
+      width: 100%; margin-top: 6px;
+      background: var(--orange); color: #fff; border: none;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 15px;
+      padding: 15px; border-radius: 9px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .form-submit-btn:hover { background: var(--orange-dk); box-shadow: 0 6px 18px rgba(217,102,31,0.34); transform: translateY(-1px); }
+    .form-submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-spinner {
+      width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    .form-submit-btn.loading .btn-spinner { display: inline-block; }
+    .form-submit-btn.loading .btn-label { opacity: 0.85; }
+    .form-privacy-note {
+      font-size: 12px; color: var(--gray-lt); text-align: center; margin-top: 14px; line-height: 1.5;
+    }
+
+    /* ── SUCCESS STATE ── */
+    .modal-success { text-align: center; padding: 20px 4px 6px; display: none; }
+    .modal-success.active { display: block; }
+    .modal-success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(34,150,90,0.12); color: #22965a;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .modal-success h3 {
+      font-family: 'Fraunces', serif; font-size: 22px; color: var(--navy); margin-bottom: 10px;
+    }
+    .modal-success p { color: var(--gray); font-size: 14.5px; line-height: 1.6; margin-bottom: 24px; }
+    .modal-success .btn-primary { display: inline-flex; }
+
+    .apply-form-wrap { display: block; }
+    .apply-form-wrap.hidden { display: none; }
+
+    @media (max-width: 560px) {
+      .form-row-2 { grid-template-columns: 1fr; }
+      .modal-card { padding: 30px 22px 26px; }
     }
   </style>
 </head>
@@ -365,10 +506,10 @@
   <p class="hero-sub">We provide funding for families facing financial hardship.</p>
 
   <div class="hero-actions">
-    <a href="https://forms.gle/uZti3E6bKVmT7mWz8" target="_blank" class="btn-primary">
+    <button type="button" class="btn-primary" onclick="openApplyModal()">
       Apply Now
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
+    </button>
     <a href="#how-it-works" class="btn-ghost">See How It Works</a>
   </div>
 </section>
@@ -470,16 +611,16 @@
       <p>Facing eviction or housing instability</p>
     </div>
   </div>
-  <p class="qualify-note">Not sure if you qualify? <a href="https://forms.gle/uZti3E6bKVmT7mWz8" target="_blank">Apply anyway</a>, it's free and takes under 2 minutes.</p>
+  <p class="qualify-note">Not sure if you qualify? <a href="#" onclick="openApplyModal(); return false;">Apply anyway</a>, it's free and takes under 2 minutes.</p>
 </section>
 
 <!-- FINAL CTA -->
 <section class="cta-section">
   <h2>Ready to Get Help?</h2>
   <p>Don't wait. Apply today and receive direct funding for the assistance you need.</p>
-  <a href="https://forms.gle/uZti3E6bKVmT7mWz8" target="_blank" class="btn-white">
+  <button type="button" class="btn-white" onclick="openApplyModal()">
     Start Your Free Application →
-  </a>
+  </button>
 </section>
 
 <!-- FOOTER -->
@@ -502,7 +643,7 @@
     </div>
     <div class="footer-col">
       <h4>Get Started</h4>
-      <a href="https://forms.gle/uZti3E6bKVmT7mWz8" target="_blank">Apply Now</a>
+      <a href="#" onclick="openApplyModal(); return false;">Apply Now</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -510,6 +651,212 @@
     <span>Applications are reviewed on a rolling basis, subject to funding availability.</span>
   </div>
 </footer>
+
+<!-- ── FULL-SCREEN LOADING OVERLAY (shown briefly on "Apply Now" click) ── -->
+<div class="page-loading-overlay" id="pageLoadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Preparing your application…</div>
+</div>
+
+<!-- ── APPLY MODAL ── -->
+<div class="modal-backdrop" id="applyModalBackdrop" onclick="if(event.target===this) closeApplyModal()">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="applyModalTitle">
+    <button type="button" class="modal-close" onclick="closeApplyModal()" aria-label="Close">✕</button>
+
+    <div class="apply-form-wrap" id="applyFormWrap">
+      <p class="modal-eyebrow">Free · Under 2 Minutes</p>
+      <h2 class="modal-title" id="applyModalTitle">Start Your Application</h2>
+      <p class="modal-sub">Tell us a little about your situation. A member of our team will follow up by phone or email.</p>
+
+      <form id="applyForm" novalidate>
+        <div class="form-row-2">
+          <div class="form-row" data-field="fullName">
+            <label class="form-label" for="fullName">Full Name <span class="req">*</span></label>
+            <input class="form-input" type="text" id="fullName" name="fullName" autocomplete="name" placeholder="Jane Doe">
+            <div class="form-error">Please enter your full name.</div>
+          </div>
+          <div class="form-row" data-field="phone">
+            <label class="form-label" for="phone">Phone <span class="req">*</span></label>
+            <input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(555) 123-4567">
+            <div class="form-error">Please enter a valid phone number.</div>
+          </div>
+        </div>
+
+        <div class="form-row" data-field="email">
+          <label class="form-label" for="email">Email <span class="req">*</span></label>
+          <input class="form-input" type="email" id="email" name="email" autocomplete="email" placeholder="jane@example.com">
+          <div class="form-error">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-row" data-field="assistanceType">
+            <label class="form-label" for="assistanceType">Assistance Needed <span class="req">*</span></label>
+            <select class="form-select" id="assistanceType" name="assistanceType">
+              <option value="">Select one…</option>
+              <option value="Rent Assistance">Rent Assistance</option>
+              <option value="Utility Bills">Utility Bills</option>
+              <option value="Security Deposit">Security Deposit</option>
+              <option value="Not sure">Not sure</option>
+            </select>
+            <div class="form-error">Please select an option.</div>
+          </div>
+          <div class="form-row" data-field="location">
+            <label class="form-label" for="location">City &amp; State <span class="req">*</span></label>
+            <input class="form-input" type="text" id="location" name="location" autocomplete="address-level2" placeholder="Austin, TX">
+            <div class="form-error">Please enter your city and state.</div>
+          </div>
+        </div>
+
+        <div class="form-row" data-field="message">
+          <label class="form-label" for="message">Briefly describe your situation <span class="req">*</span></label>
+          <textarea class="form-textarea" id="message" name="message" placeholder="What's going on, and what would help most right now?"></textarea>
+          <div class="form-error">Please share a few details so we can help.</div>
+        </div>
+
+        <button type="submit" class="form-submit-btn" id="applySubmitBtn">
+          <span class="btn-spinner"></span>
+          <span class="btn-label">Submit Application</span>
+        </button>
+
+        <p class="form-privacy-note">Your information is kept confidential and is only used to process your application.</p>
+      </form>
+    </div>
+
+    <div class="modal-success" id="applySuccess">
+      <div class="modal-success-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h3>Application Received</h3>
+      <p>Thank you — we've got your information. A member of our team will reach out by phone or email shortly.</p>
+      <button type="button" class="btn-primary" onclick="closeApplyModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─────────────────────────────────────────────────────────────
+  // CONFIG: paste your deployed Google Apps Script Web App URL below.
+  // (Deploy the Apps Script as: Deploy > New deployment > Web app,
+  //  Execute as: Me, Who has access: Anyone.)
+  // ─────────────────────────────────────────────────────────────
+  const APPLY_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxS6uKvWWqb1OIF-LtANrF2hqsV3ZS9VAHv1u5QkEGxwOLc6UGKH1bJs-8r7YFYz0Zv/exec";
+
+  const pageLoadingOverlay = document.getElementById('pageLoadingOverlay');
+  const applyModalBackdrop = document.getElementById('applyModalBackdrop');
+  const applyFormWrap = document.getElementById('applyFormWrap');
+  const applySuccess = document.getElementById('applySuccess');
+  const applyForm = document.getElementById('applyForm');
+  const applySubmitBtn = document.getElementById('applySubmitBtn');
+
+  function openApplyModal() {
+    // Show a brief full-screen loading state for a professional, deliberate feel
+    pageLoadingOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(function () {
+      pageLoadingOverlay.classList.remove('active');
+      applyFormWrap.classList.remove('hidden');
+      applySuccess.classList.remove('active');
+      applyModalBackdrop.classList.add('active');
+      const firstField = document.getElementById('fullName');
+      if (firstField) firstField.focus();
+    }, 600);
+  }
+
+  function closeApplyModal() {
+    applyModalBackdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && applyModalBackdrop.classList.contains('active')) {
+      closeApplyModal();
+    }
+  });
+
+  function clearFieldError(row) {
+    row.classList.remove('has-error');
+  }
+
+  function setFieldError(row) {
+    row.classList.add('has-error');
+  }
+
+  function validateApplyForm(data) {
+    let valid = true;
+    const rows = applyForm.querySelectorAll('.form-row[data-field]');
+    rows.forEach(clearFieldError);
+
+    const nameRow = applyForm.querySelector('[data-field="fullName"]');
+    if (!data.fullName.trim()) { setFieldError(nameRow); valid = false; }
+
+    const phoneRow = applyForm.querySelector('[data-field="phone"]');
+    if (!data.phone.trim() || data.phone.replace(/\D/g, '').length < 7) { setFieldError(phoneRow); valid = false; }
+
+    const emailRow = applyForm.querySelector('[data-field="email"]');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
+    if (!emailOk) { setFieldError(emailRow); valid = false; }
+
+    const typeRow = applyForm.querySelector('[data-field="assistanceType"]');
+    if (!data.assistanceType) { setFieldError(typeRow); valid = false; }
+
+    const locationRow = applyForm.querySelector('[data-field="location"]');
+    if (!data.location.trim()) { setFieldError(locationRow); valid = false; }
+
+    const messageRow = applyForm.querySelector('[data-field="message"]');
+    if (!data.message.trim()) { setFieldError(messageRow); valid = false; }
+
+    return valid;
+  }
+
+  applyForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const data = {
+      fullName: document.getElementById('fullName').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      assistanceType: document.getElementById('assistanceType').value,
+      location: document.getElementById('location').value,
+      message: document.getElementById('message').value,
+      submittedAt: new Date().toISOString(),
+      source: 'bizrisk-style-landing-page' // harmless tag identifying the source form
+    };
+
+    if (!validateApplyForm(data)) {
+      const firstError = applyForm.querySelector('.form-row.has-error .form-input, .form-row.has-error .form-select, .form-row.has-error .form-textarea');
+      if (firstError) firstError.focus();
+      return;
+    }
+
+    // ── Loading state on the submit button ──
+    applySubmitBtn.classList.add('loading');
+    applySubmitBtn.disabled = true;
+
+    const params = new URLSearchParams(data);
+
+    fetch(APPLY_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script Web Apps don't return CORS headers for cross-origin reads;
+                        // the request still reaches the script and gets processed.
+      body: params
+    })
+      .catch(function (err) {
+        // Network-level failure only (e.g. offline); the no-cors request itself
+        // will still typically succeed even though we can't read the response.
+        console.error('Submission network error:', err);
+      })
+      .finally(function () {
+        setTimeout(function () {
+          applySubmitBtn.classList.remove('loading');
+          applySubmitBtn.disabled = false;
+          applyForm.reset();
+          applyFormWrap.classList.add('hidden');
+          applySuccess.classList.add('active');
+        }, 700); // brief delay so the loading state feels intentional, not instant
+      });
+  });
+</script>
 
 </body>
 </html>
